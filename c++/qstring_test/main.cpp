@@ -1,17 +1,25 @@
 #include <iostream>
 
-//#include <QCoreApplication>
+#include <QCoreApplication>
+
 #include <QString>
+#include <QStringList>
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    QString hello = QString("%1 %2").arg("hello", "world");
-    //QCoreApplication a(argc, argv);
+	QCoreApplication app(argc, argv);
 
-    cout << hello.toStdString() << endl;
-    //exit(a.exec());
-    exit(EXIT_SUCCESS);
+	QCoreApplication::setApplicationName("Hello World!");
+	QCoreApplication::setApplicationVersion("0.0");
+
+	QStringList args = app.arguments();
+
+	cout << "Command line: " << args.join(" ").toStdString() << endl;
+	cout << "PID: " << app.applicationPid() << endl;
+
+	// app.exec(); // main loop
+	app.exit(0);
 }
 
