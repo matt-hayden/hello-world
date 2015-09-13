@@ -11,7 +11,7 @@ Wrapper for the entire based application.  Runs a function which should be the r
 """
 
 @contextmanager
-def wrapper():
+def curses_window():
 	"""Original comment:
 	Wrapper function that initializes and calls another function, restoring normal keyboard/screen behavior on error.  The callable object 'func' is then passed the main window 'stdscr' as its first argument, followed by any other arguments passed to wrapper().
 	"""
@@ -46,7 +46,7 @@ def wrapper():
 #
 
 if __name__ == '__main__':
-	with wrapper() as stdscr:
+	with curses_window() as stdscr:
 		lines, cols = stdscr.getmaxyx()
 		init_pair(1,	COLOR_WHITE,	COLOR_RED)
 		init_pair(2,	COLOR_GREEN,	COLOR_BLACK)
