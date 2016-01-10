@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import numpy as np
 
-big_permutations = { 'bit-reversal': np.array([0, 1], dtype=np.uint) }
+big_permutations = { 'bit-reversal': np.array([0, 1], dtype=np.long) }
 
 def get_bit_reversal(mylen, lookup=big_permutations):
 	cur = lookup['bit-reversal']
@@ -11,5 +11,5 @@ def get_bit_reversal(mylen, lookup=big_permutations):
 		s = (n+1)
 		cur = np.hstack((n, s)) % dlen
 	lookup['bit-reversal'] = cur
-	return np.extract( (cur<mylen), cur)
+	return cur if (mylen == len(cur)) else np.extract( (cur<mylen), cur)
 #
