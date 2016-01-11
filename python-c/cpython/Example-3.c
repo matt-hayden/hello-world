@@ -49,16 +49,27 @@ static PyObject *
 argtest(PyObject *self, PyObject *args)
 {
 	int arg_parsed = 0;
-	const char * argstring;
-	PyObject * argobject; /* needs reference counting */
 
-	if (PyArg_ParseTuple(args, "s", &argstring)) {
+	if (arg_parsed) { /* pass */
+	} else if (PyArg_ParseTuple(args, "")) {
+		printf("Empty arguments\n");
+		arg_parsed = 1; // TRUE;
+	} else if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+		PyErr_Clear();
+	}
+
+	const char * argstring;
+	if (arg_parsed) { /* pass */
+	} else if (PyArg_ParseTuple(args, "s", &argstring)) {
 		printf("String: %s\n", argstring);
 		arg_parsed = 1; // TRUE;
 	} else if (PyErr_ExceptionMatches(PyExc_TypeError)) {
 		PyErr_Clear();
 	}
-	if (!arg_parsed && PyArg_ParseTuple(args, "O", &argobject)) {
+
+	PyObject * argobject; /* needs reference counting */
+	if (arg_parsed) { /* pass */
+	} else if (PyArg_ParseTuple(args, "O", &argobject)) {
 		if (argobject == Py_None) {
 			printf("Argument is 'None'\n");
 			arg_parsed = 1;
@@ -75,11 +86,10 @@ argtest(PyObject *self, PyObject *args)
 
 static PyMethodDef args_methods[] = {
 	/* The cast of the function is necessary since PyCFunction values
-	 * only take two PyObject* parameters, and argtest() takes
+	 * only take two PyObject* parameters, and argtest() could take
 	 * three.
 	 */
-	{"argtest", (PyCFunction)argtest, METH_VARARGS,
-	 "Show C args in Python."},
+	{"argtest", (PyCFunction)argtest, METH_VARARGS, "Show C args in Python."},
 	{NULL, NULL, 0, NULL}   /* sentinel */
 };
 
