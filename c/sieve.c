@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#define LIMIT 10000000LL
+#define LIMIT 100000000LL
 
 typedef
 unsigned long long  sieve_size_t;
@@ -25,39 +25,49 @@ get_primes(sieve_size_t limit)
 {
 	prime_array pa = INIT_PRIME_ARRAY();
 
-	int *lookup; /* an array of 0 for non-prime and 1 for prime */
-	lookup = malloc(sizeof(int)*limit);
+	int * is_composite;
+	is_composite = calloc(limit, sizeof(int));
 
 	sieve_size_t i, j;
-	// clear
-	for (i=2; i<limit; i++)
-		lookup[i]=1;
-
 	for (i=2; i<limit; i++)
 	{
-		if (lookup[i])
+		if (!is_composite[i])
 		{
 			for (j=i; i*j<limit; j++)
-				lookup[i*j]=0;
+				is_composite[i*j]=1;
 			pa.len++;
 		}
 	}
-	pa.primes = malloc(pa.len*pa.member_size);
+	pa.primes = calloc(pa.len, pa.member_size);
 	
 	j = 0;
 	for (i=2; i<limit; i++)
 	{
-		if (lookup[i]) pa.primes[j++] = i;
+		if (!is_composite[i]) pa.primes[j++] = i;
 	}
 	assert(j == pa.len);
-	free(lookup);
+#ifdef pause
+	printf("Hit enter to free %lld bytes\n", limit);
+	char nada[2];
+	fgets(nada, 2, stdin);
+#endif
+	free(is_composite);
 	return pa;
 }
 
 
 int main(void)
 {
+#ifdef pause
+	printf("Hit enter to sieve up to %lld\n", LIMIT);
+	char nada[2];
+	fgets(nada, 2, stdin);
+#endif
 	prime_array pa = get_primes(LIMIT);
 	printf("%ld primes exist up to %lld\n", pa.len, LIMIT);
+#ifdef pause
+	printf("Hit enter to quit\n");
+	fgets(nada, 2, stdin);
+#endif
 	return 0;
 }
