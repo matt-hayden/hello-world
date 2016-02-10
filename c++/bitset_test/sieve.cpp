@@ -1,6 +1,5 @@
 #include <bitset>
 #include <vector>
-
 #include <iostream>
 
 #define LIMIT 100000000ULL
@@ -11,9 +10,14 @@ unsigned long long  sieve_size_t;
 std::vector<unsigned long long> *
 get_primes(sieve_size_t limit)
 {
+#ifdef _GLIBCXX_BITSET
 	std::bitset<LIMIT>		*	p_is_composite;
+	p_is_composite			=	new std::bitset<LIMIT>;
+#else
+	std::vector<bool>		*	p_is_composite;
+	p_is_composite			=	new std::vector<bool> (LIMIT);
+#endif
 	std::vector<unsigned long long>	*	p_pa;
-	p_is_composite			=	new std::bitset<LIMIT>; // avoid the heap
 	p_pa				=	new std::vector<unsigned long long>;
 
 	sieve_size_t i, j;
