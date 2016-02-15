@@ -1,5 +1,5 @@
 #include "Python.h"
-#include "py_logging.c"
+#include "py_logging.h"
 
 static PyMethodDef logging_test_methods[] = {
 	{NULL, NULL, 0, NULL}   /* sentinel */
