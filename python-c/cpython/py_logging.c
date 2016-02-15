@@ -82,9 +82,9 @@ logging_config(const char * module_name,
 {
 	PyObject * logger, * logging_module;
 	if (module_name != NULL && module_name[0] != '\0')
-		logging_module = PyImport_ImportModule(module_name); // global
+		logging_module = PyImport_ImportModule(module_name);
 	else
-		logging_module = PyImport_ImportModule("logging"); // global
+		logging_module = PyImport_ImportModule("logging");
 	assert(PyObject_HasAttrString(logging_module, "getLogger"));
 	if (logger_name != NULL && logger_name[0] != '\0')
 		logger = PyObject_CallMethod(logging_module, "getLogger", "(z)", logger_name);
@@ -103,7 +103,7 @@ logging_config(const char * module_name,
 int inline
 logging_basicConfig(void)
 {
-	return logging_config(NULL, NULL, NULL);
+	return logging_config("logging", NULL, "C");
 }
 
 void
