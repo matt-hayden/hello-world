@@ -23,12 +23,6 @@ PyModuleDef module = {
 	logging_test_methods
 };
 
-/*
-
-Access the Python logging facility from within C. debug(), info(), warning(), error(), critical() are simple functions for dropping
-strings to Python.
-	logging.debug(Py_BuildValue("(zi)", PyUnicode_FromString(message), PyInt_FromLong(1234)) ) 
-*/
 
 void
 example(void)
@@ -37,7 +31,8 @@ example(void)
 	DEBUG("debug from c");
 	INFO("info from c");
 	WARNING("warning from c");
-	logging.warning(Py_BuildValue("(zii)", "The best number is %d, way better than %d", 42, 0));
+	// Note that % notation is passed to Python, which is different than printf
+	logging->warning(Py_BuildValue("(zif)", "The best number is %d, way better than %.5f", 42, 3.14159));
 	ERROR("error from c");
 	CRITICAL("critical from c");
 }
@@ -51,7 +46,8 @@ PyInit_logging_test(void)
 	if (m == NULL)
 		return NULL;
 	// ... end of stock
-	setup_logging(NULL, module.m_name, "C");
+	// logging_basicConfig(); // This get you up and running without any backchat
+	logging_config(NULL, module.m_name, "C"); // Arguments are logging module, existing logger name, child name
 	Py_AtExit(exit_logging); // Can call multiple times, exit_logging should be called first
 	example();
 	return m;
