@@ -1,23 +1,27 @@
 /*
-
 Access the Python logging facility from within C. debug(), info(), warning(), error(), critical() are simple functions for dropping
-strings to Python. debugO allows explicit args like so:
-	debug0(Py_BuildValue("(zi)", PyUnicode_FromString(message), PyInt_FromLong(1234)) ) 
+strings to Python.
 
 // Don't forget to initialize and finalize in this way:
 
 PyMODINIT_FUNC
-PyInit_clogging(void)
+PyInit_logging_test(void)
 {
 	// stock...
 	PyObject * m;
-	m = PyModule_Create(&your_logging_module);
+	m = PyModule_Create(&logging_test_module);
 	if (m == NULL)
 		return NULL;
 	// ... end of stock
-	setup_logging();
+	setup_logging("logging");
 	Py_AtExit(exit_logging); // Can call multiple times, exit_logging should be called first
-	debug("clogging module imported");
+	DEBUG("debug from c");
+	INFO("info from c");
+	WARNING("warning from c");
+	// arguments must be explicitly specified:
+	logging.warning(Py_BuildValue("(zii)", "The best number is %d, way better than %d", 42, 0));
+	ERROR("error from c");
+	CRITICAL("critical from c");
 	return m;
 }
 */
@@ -29,6 +33,7 @@ PyInit_clogging(void)
 
 #include "Python.h"
 
+// Arguments are tuples:
 #define DEBUG(arg) \
 	logging.debug(Py_BuildValue("(z)", arg));
 #define INFO(arg) \
@@ -76,25 +81,25 @@ struct LoggingLevelFunctionInterface {
 } logging;
 
 // These can't be inlines
-void
-_debug(PyObject * args)
-{ PyObject_CallObject(py_logging_handles.debug, args); }
+	void
+	_debug(PyObject * args)
+	{ PyObject_CallObject(py_logging_handles.debug, args); }
 
-void
-_info(PyObject * args)
-{ PyObject_CallObject(py_logging_handles.info, args); }
+	void
+	_info(PyObject * args)
+	{ PyObject_CallObject(py_logging_handles.info, args); }
 
-void
-_warning(PyObject * args)
-{ PyObject_CallObject(py_logging_handles.warning, args); }
+	void
+	_warning(PyObject * args)
+	{ PyObject_CallObject(py_logging_handles.warning, args); }
 
-void
-_error(PyObject * args)
-{ PyObject_CallObject(py_logging_handles.error, args); }
+	void
+	_error(PyObject * args)
+	{ PyObject_CallObject(py_logging_handles.error, args); }
 
-void
-_critical(PyObject * args)
-{ PyObject_CallObject(py_logging_handles.critical, args); }
+	void
+	_critical(PyObject * args)
+	{ PyObject_CallObject(py_logging_handles.critical, args); }
 
 struct LoggingLevelFunctionInterface
 get_standard_logging_functions(struct LoggingFunctionHandleInterface handles)

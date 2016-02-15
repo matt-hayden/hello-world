@@ -2,7 +2,6 @@
 #include "py_logging.c"
 
 static PyMethodDef logging_test_methods[] = {
-	//{"argtest", (PyCFunction)argtest, METH_VARARGS, "Show C logging_test in Python."},
 	{NULL, NULL, 0, NULL}   /* sentinel */
 };
 
@@ -36,6 +35,7 @@ PyInit_logging_test(void)
 	DEBUG("debug from c");
 	INFO("info from c");
 	WARNING("warning from c");
+	logging.warning(Py_BuildValue("(zii)", "The best number is %d, way better than %d", 42, 0));
 	ERROR("error from c");
 	CRITICAL("critical from c");
 	return m;
