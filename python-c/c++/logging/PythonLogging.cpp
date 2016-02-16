@@ -24,10 +24,15 @@ PythonLogging::PythonLogging(PyObject * logger)
 {
 	_logger = logger;
 	_debug = PyObject_GetAttrString(logger, "debug");
+	assert(PyCallable_Check(_debug) && "logger.debug() invalid");
 	_info = PyObject_GetAttrString(logger, "info");
+	assert(PyCallable_Check(_info) && "logger.info() invalid");
 	_warning = PyObject_GetAttrString(logger, "warning");
+	assert(PyCallable_Check(_warning) && "logger.warning() invalid");
 	_error = PyObject_GetAttrString(logger, "error");
+	assert(PyCallable_Check(_error) && "logger.error() invalid");
 	_critical = PyObject_GetAttrString(logger, "critical");
+	assert(PyCallable_Check(_critical) && "logger.critical() invalid");
 }
 
 PythonLogging::~PythonLogging()
@@ -76,14 +81,14 @@ logging_config(const std::string & module_name,
 		logging_module = PyImport_ImportModule(module_name.c_str());
 	else
 		logging_module = PyImport_ImportModule("logging");
-	//assert(PyObject_HasAttrString(logging_module, "getLogger"));
+	assert(PyObject_HasAttrString(logging_module, "getLogger") && "logger.getLogger() not found");
 	if (!logger_name.empty())
 		logger = PyObject_CallMethod(logging_module, "getLogger", "(z)", logger_name.c_str());
 	else
 		logger = PyObject_CallMethod(logging_module, "getLogger", NULL);
 	if (!child_name.empty())
 	{
-		//assert(PyObject_HasAttrString(logger, "getChild"));
+		assert(PyObject_HasAttrString(logger, "getChild") && "logger.getChild() not found");
 		Py_DECREF(logger); // replaced by...
 		logger = PyObject_CallMethod(logger, "getChild", "(z)", child_name.c_str());
 	}

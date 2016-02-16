@@ -79,8 +79,6 @@ void exit_logging(void);
 /*
  * Globals for python logging
  */
-PyObject * logging_logger;
-LoggingFunctionHandleInterface * logging_function_handles;
-LoggingLevelFunctionInterface * logging;
+extern LoggingLevelFunctionInterface * logging;
 
 #endif

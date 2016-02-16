@@ -2,6 +2,10 @@
 #define _PY_LOGGING_C_
 #include "py_logging.h"
 
+static PyObject * logging_logger;
+static LoggingFunctionHandleInterface * logging_function_handles;
+LoggingLevelFunctionInterface * logging;
+
 #include <assert.h>
 
 // These can't be inlines
@@ -29,17 +33,17 @@
 LoggingFunctionHandleInterface *
 get_standard_logging_handles(PyObject * arg)
 {
-	assert( PyObject_HasAttrString(arg, "debug") &&
-			PyObject_HasAttrString(arg, "info") &&
-			PyObject_HasAttrString(arg, "warning") &&
-			PyObject_HasAttrString(arg, "error") &&
-			PyObject_HasAttrString(arg, "critical") );
 	LoggingFunctionHandleInterface * handles;
 	handles = malloc(sizeof(LoggingFunctionHandleInterface));
+	assert(PyObject_HasAttrString(arg, "debug") && "debug() invalid");
 	handles->debug = PyObject_GetAttrString(arg, "debug");
+	assert(PyObject_HasAttrString(arg, "info") && "info() invalid");
 	handles->info = PyObject_GetAttrString(arg, "info");
+	assert(PyObject_HasAttrString(arg, "warning") && "warning() invalid");
 	handles->warning = PyObject_GetAttrString(arg, "warning");
+	assert(PyObject_HasAttrString(arg, "error") && "error() invalid");
 	handles->error = PyObject_GetAttrString(arg, "error");
+	assert(PyObject_HasAttrString(arg, "critical") && "critical() invalid");
 	handles->critical = PyObject_GetAttrString(arg, "critical");
 	return handles;
 }
@@ -66,11 +70,6 @@ logging_set_logger(PyObject * logger)
 		return FALSE;
 	logging_logger = logger;
 	logging_function_handles = get_standard_logging_handles(logging_logger);
-	assert( PyCallable_Check(logging_function_handles->debug) &&
-			PyCallable_Check(logging_function_handles->info) &&
-			PyCallable_Check(logging_function_handles->warning) &&
-			PyCallable_Check(logging_function_handles->error) &&
-			PyCallable_Check(logging_function_handles->critical) );
 	logging = get_standard_logging();
 	return TRUE;
 }
@@ -85,14 +84,14 @@ logging_config(const char * module_name,
 		logging_module = PyImport_ImportModule(module_name);
 	else
 		logging_module = PyImport_ImportModule("logging");
-	assert(PyObject_HasAttrString(logging_module, "getLogger"));
+	assert(PyObject_HasAttrString(logging_module, "getLogger") && "logger.getLogger() invalid");
 	if (logger_name != NULL && logger_name[0] != '\0')
 		logger = PyObject_CallMethod(logging_module, "getLogger", "(z)", logger_name);
 	else
 		logger = PyObject_CallMethod(logging_module, "getLogger", NULL);
 	if (child_name != NULL || child_name[0] != '\0')
 	{
-		assert(PyObject_HasAttrString(logger, "getChild"));
+		assert(PyObject_HasAttrString(logger, "getChild") && "logger.getChild() invalid");
 		Py_DECREF(logger); // replaced by...
 		logger = PyObject_CallMethod(logger, "getChild", "(z)", child_name);
 	}
