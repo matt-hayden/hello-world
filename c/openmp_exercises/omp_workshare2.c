@@ -42,7 +42,7 @@ for (i=0; i<N; i++) {
       for (i=0; i<N; i++)
         {
         c[i] = a[i] + b[i];
-        printf("Thread %d: c[%d]= %f\n",tid,i,c[i]);
+        printf("Thread %d: c[%03d]= %f\n",tid,i,c[i]);
         }
       }
 
@@ -52,7 +52,7 @@ for (i=0; i<N; i++) {
       for (i=0; i<N; i++)
         {
         d[i] = a[i] * b[i];
-        printf("Thread %d: d[%d]= %f\n",tid,i,d[i]);
+        printf("Thread %d: d[%03d]= %f\n",tid,i,d[i]);
         }
       }
 

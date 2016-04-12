@@ -38,7 +38,7 @@ chunk = CHUNKSIZE;
   for (i=0; i<N; i++)
     {
     c[i] = a[i] + b[i];
-    printf("Thread %d: c[%d]= %f\n",tid,i,c[i]);
+    printf("Thread %d: c[%03d]= %f\n",tid,i,c[i]);
     }
 
   }  /* end of parallel section */
