@@ -19,8 +19,9 @@
 #define FOREACH(iterator, ...) \
 	for (char **iterator = (char * []) {__VA_ARGS__, NULL}; *iterator; iterator++)
 
-typedef struct _s {
+typedef struct file_and_error {
 	char * contents;
+	size_t len;
 	GError *error;
 } file_and_error ;
 
@@ -30,9 +31,13 @@ file_and_error * r;
 
 	r = malloc(sizeof(file_and_error));
 	r->error = NULL;
-	GIOChannel *f;
+	GIOChannel *f; // should be g_free()d when done
 	check( (f = g_io_channel_new_file(filename, "r", &(r->error)) ), "g_io_channel_new_file(%s)", filename);
-	check( (g_io_channel_read_to_end(f, &(r->contents), NULL, &(r->error)) == G_IO_STATUS_NORMAL), "g_io_channel_read_to_end");
+	check( (g_io_channel_read_to_end(f,
+					 &(r->contents),
+					 &(r->len),
+					 &(r->error)) == G_IO_STATUS_NORMAL), "g_io_channel_read_to_end");
+	g_free(f);
 	return r;
 error:
 	return r;
