@@ -65,7 +65,7 @@ int main(int argc, const char * const *argv)
   char salt[9];
   apr_status_t rv;
 
-  /* Actually use the app_initialize funciton if you are
+  /* Actually use the app_initialize function if you are
    * not writing a library.
    *
    * This function is defined in apr_general.h

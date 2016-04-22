@@ -25,7 +25,7 @@ int main(int argc, char **argv)
   char *time = NULL;
 
   /* Initialize APR at the program start */
-  apr_initialize(&argc, &argv, NULL);
+  apr_app_initialize(&argc, &argv, NULL);
 
   /* atexit(apr_terminate()); gives 
    * error: invalid use of void expression 
