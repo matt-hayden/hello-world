@@ -29,7 +29,7 @@ int main(int argc, const char * const *argv)
   const apr_getopt_option_t longOpts[] = {{"help", 'h', 0, "Show help"}, {"choose", 'c', 1, "Choose something"}}; 
 
   /* init APR, create memory pool */
-  apr_initialize();
+  apr_app_initialize(&argc, &argv, NULL);
   atexit(apr_terminate);
   apr_pool_create(&p, NULL);
 

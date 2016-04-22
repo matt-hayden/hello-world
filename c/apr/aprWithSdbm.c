@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
 
   /* Always init at program start */
-  apr_initialize();
+  apr_app_initialize(&argc, &argv, NULL);
 
   /* Register cleanup */
   atexit(apr_terminate);
