@@ -19,11 +19,12 @@ qsort.resttype = None
 
 
 def cmp_fn(pa, pb):
-	a = pa[0] # must unbox
-	b = pb[0] # must unbox
-	return a < b
+	a = pa[0] # dereference a pointer
+	b = pb[0] # dereference a pointer
+	return a.L2() - b.L2()
 
 
 print(parr)
+print("Sorting by L2 norm:")
 qsort(parr.ctype, len(parr), sizeof(parr.inner_type), CFUNCTYPE(c_int, POINTER(parr.inner_type), POINTER(parr.inner_type))(cmp_fn))
 print(parr)
