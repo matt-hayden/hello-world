@@ -8,12 +8,15 @@
 
 #if (170 <= MAX_FACT_INDEX)
   typedef long double fact_t;
+  #define POW powl
   #define FACT_PRINTF_FORMAT "L"
 #elif (34 <= MAX_FACT_INDEX)
   typedef double fact_t;
+  #define POW pow
   #define FACT_PRINTF_FORMAT "l"
 #else
   typedef float fact_t;
+  #define POW powf
   #define FACT_PRINTF_FORMAT ""
 #endif
 
