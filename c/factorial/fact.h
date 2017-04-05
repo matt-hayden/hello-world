@@ -3,7 +3,8 @@
 
 #include <math.h> // for pow, powl, and powf
 
-#define MAX_FACT_INDEX 65535
+// 1755 is the highest n! representable in quad precision
+#define MAX_FACT_INDEX 12345678
 
 
 long double odd_fact_log2(unsigned);

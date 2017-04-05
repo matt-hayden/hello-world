@@ -4,16 +4,13 @@
 long double
 odd_fact_log2(unsigned index) {
   static long double memo[MAX_FACT_INDEX+1] = { 0., 0. };
-  if (index < 2) return 0;
-  if (MAX_FACT_INDEX < index) {
-    return INFINITY;
-  }
-  if (!memo[index]) {
-    memo[index] = (index%2)
-                  ? odd_fact_log2(index-2)+log2(index)
-                  : odd_fact_log2(index-1);
-  }
-  return memo[index];
+  if (index < 2) return 0.;
+  if ((index < MAX_FACT_INDEX) && memo[index]) return memo[index];
+  long double f = (index%2) ?
+                    odd_fact_log2(index-2)+log2(index)
+                    : odd_fact_log2(index-1);
+  if (index < MAX_FACT_INDEX) memo[index] = f;
+  return f;
 }
 
 
@@ -21,15 +18,12 @@ long double
 fact_log2(unsigned index) {
   static long double memo[MAX_FACT_INDEX+1] = { 0., 0. };
   if (index < 2) return 0;
-  if (MAX_FACT_INDEX < index) {
-    return INFINITY;
-  }
-  if (!memo[index]) {
-    memo[index] = odd_fact_log2(index)
+  if ((index < MAX_FACT_INDEX) && memo[index]) return memo[index];
+  long double f = odd_fact_log2(index)
                   + fact_log2(index/2)
                   + (index/2);
-  }
-  return memo[index];
+  if (index < MAX_FACT_INDEX) memo[index] = f;
+  return f;
 }
 
 
