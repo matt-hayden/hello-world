@@ -1,16 +1,14 @@
+//#include <malloc.h>
 #include <stdio.h>
 
 #include "fact.h"
 
 int
 main(int argc, char **argv) {
-  printf("Computing...\n");
-  fact(MAX_FACT_INDEX+1);
-  int i;
-  for (i = 0; i < 24; i++) {
-    printf("%02d %25.0" FACT_PRINTF_FORMAT "f\n", i, fact(i));
-  }
-  for (i = MAX_FACT_INDEX-24; i <= MAX_FACT_INDEX; i++) {
-    printf("%02d %.2" FACT_PRINTF_FORMAT "e\n", i, fact(i));
+  long double f;
+  for (unsigned x = 0; x < 25; x++) {
+    f = fact_over_2en(x);
+    //printf("\t%12u\t%12Lg\t%12Lg\t%12Lg\n", x, odd_fact(x), f, fact(f));
+    printf("\t%12u\t%12Lg\t%12Lg\t%12Lg\n", x, odd_fact(x), f, f*powl(2., x));
   }
 }

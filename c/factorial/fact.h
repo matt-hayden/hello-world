@@ -1,24 +1,17 @@
 #ifndef _FACT_H_
 #define _FACT_H_
-#include <math.h>
-#include <stddef.h> // for size_t
 
-//#define MAX_FACT_INDEX 1755
-#define MAX_FACT_INDEX 200
+#include <math.h> // for pow, powl, and powf
+//#include <stddef.h> // for size_t
 
-#if (170 <= MAX_FACT_INDEX)
-  typedef long double fact_t;
-  #define POW powl
-  #define FACT_PRINTF_FORMAT "L"
-#elif (34 <= MAX_FACT_INDEX)
-  typedef double fact_t;
-  #define POW pow
-  #define FACT_PRINTF_FORMAT "l"
-#else
-  typedef float fact_t;
-  #define POW powf
-  #define FACT_PRINTF_FORMAT ""
-#endif
+#define MAX_FACT_INDEX 1755
 
-fact_t fact(size_t);
+long double odd_fact(unsigned);
+
+long double fact_over_2en(unsigned);
+
+long double fact(unsigned);
+
+long double choose(unsigned, unsigned);
+
 #endif
