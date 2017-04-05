@@ -1,7 +1,14 @@
 #ifndef _FACT_H_
 #define _FACT_H_
 
+#ifndef ALLOW_MEMO_ON_STACK
+  #include <malloc.h> // see memo
+#endif
+
 #include <math.h> // for pow, powl, and powf
+#include <stdio.h>
+#include <stdlib.h>
+
 
 // 1755 is the highest n! representable in quad precision
 #define MAX_FACT_INDEX 12345678
