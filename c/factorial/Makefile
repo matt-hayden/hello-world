@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall --std=gnu99 -fpic
+CFLAGS = -Wall --std=gnu99 -fpic -g
 
 all: libfact.so.1
 
@@ -24,3 +24,6 @@ fact_test.static: fact_test.c libfact.a
 
 fact_test.shared: fact_test.c libfact.so.1
 	$(CC) -o $@ $^ -L. -lfact -lm
+
+take: take.o libfact.a
+	$(CC) -o $@ -static $^ -L. -lfact -lm
