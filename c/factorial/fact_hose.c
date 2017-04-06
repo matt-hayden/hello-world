@@ -10,7 +10,7 @@ main(int argc, char **argv) {
   if (argc == 2) {
     ubound = (unsigned) atol(argv[1]);
   }
-  printf("%8s\t%12s\t%14s\n", "n", "log(n!)", "n!");
+  printf("%8s\t%12s\t%14s\n", "n", "log2(n!)", "n!");
   for (unsigned x = 0; x < ubound; x++) {
     f = fact_log2(x);
     if (!isfinite(f)) exit(0);
