@@ -2,5 +2,6 @@
 a.out
 *.a
 *.o
+*.so
 
 __pycache__
