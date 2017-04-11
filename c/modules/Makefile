@@ -2,10 +2,10 @@ CC ?= gcc
 CFLAGS = -Wall -g
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -fpic -c $^ -o $@
 
-%.so: %.c
-	$(CC) $(CFLAGS) -fpic -shared -Wl,-soname,$@ -o $@ $^
+%.so: %.o
+	$(CC) $(CFLAGS) -shared -Wl,-soname,$@ -o $@ $^
 
-manager_test: manager_test.o manager.o
-	$(CC) $^ -o $@ -ldl
+manager: manager.o
+	$(CC) $(CFLAGS) $^ -o $@ -ldl
