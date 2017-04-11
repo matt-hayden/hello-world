@@ -1,3 +1,4 @@
+#include <stdlib.h>
 
 #include "plugin.h"
 
@@ -6,6 +7,9 @@ addone(unsigned arg) {
   return (double) arg+1;
 }
 
+void
+iquit() {
+}
 
 int
 register_plugin(void *lib_handle,
@@ -17,5 +21,6 @@ register_plugin(void *lib_handle,
     .declaration="double addone(unsigned arg)",
     .unsigned_to_double_function=addone
   });
+  atexit(iquit);
   return 0;
 }
