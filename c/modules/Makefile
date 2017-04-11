@@ -7,5 +7,5 @@ CFLAGS = -Wall -g
 %.so: %.o
 	$(CC) $(CFLAGS) -shared -Wl,-soname,$@ -o $@ $^
 
-manager: manager.o
+loader: loader.o
 	$(CC) $(CFLAGS) $^ -o $@ -ldl
