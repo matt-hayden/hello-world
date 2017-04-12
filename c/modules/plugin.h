@@ -11,6 +11,7 @@
 #endif
 
 typedef void* plugin_handle;
+typedef void (*function_handle)(void);
 
 typedef struct plugin_object_definition_s {
   plugin_handle lib_handle;
@@ -19,7 +20,7 @@ typedef struct plugin_object_definition_s {
   const char *version;
   const char *declaration;
   const char *built;
-  void (*func_ptr)(void);
+  function_handle func_ptr;
 } *plugin_object;
 
 
@@ -45,7 +46,7 @@ typedef int (*register_plugin_callback_t)(plugin_loader);
   #define REGISTER_FUNCTION(...) register_for_plugin((struct plugin_object_definition_s) { \
     .filename=__FILE__, \
     .built=__DATE__ " " __TIME__, \
-    .version="1.0.0", \
+    .version="Unversioned", \
     __VA_ARGS__ })
 #endif
 

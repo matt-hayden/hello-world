@@ -31,8 +31,10 @@ load_plugin(const char *filename) {
 }
 
 int
-setup_loader(char **filenames) {
-  #define PLUGIN_PATH "./"
+_setup_loader(char const **filenames) {
+  #ifndef PLUGIN_PATH
+    #define PLUGIN_PATH "./"
+  #endif
   if (loader == NULL) {
     loader = malloc(sizeof(struct plugin_loader_s));
     *loader = (struct plugin_loader_s) {
@@ -41,17 +43,19 @@ setup_loader(char **filenames) {
       .register_for_plugin = register_for_plugin
     };
   }
-  char* filename = malloc(10*1024);
-  for (unsigned i = 0; filenames[i] != NULL; i++) {
-    sprintf(filename, PLUGIN_PATH "/%s", filenames[i]);
-    load_plugin(filename);
+  if (filenames != NULL) {
+    char* filename = malloc(10*1024);
+    for (unsigned i = 0; filenames[i] != NULL; i++) {
+      sprintf(filename, PLUGIN_PATH "/%s", filenames[i]);
+      load_plugin(filename);
+    }
+    free(filename);
   }
-  free(filename);
 }
 
 struct get_plugin_function_s
 get_plugin_function(const char* name) {
-  for (unsigned i = loader->nfunctions-1; 0 < i; i--) {
+  for (int i = loader->nfunctions-1; 0 <= i; i--) {
     plugin_object obj = &loader->functions[i];
     if (obj == NULL) continue;
     if (!strcmp(obj->name, name)) {
