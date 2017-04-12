@@ -10,4 +10,3 @@ LDFLAGS ?= -ldl
 
 loader_test: loader_test.o loader.o
 	$(CC) $^ -o $@ $(LDFLAGS)
-

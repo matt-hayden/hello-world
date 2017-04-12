@@ -2,18 +2,18 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <malloc.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-#include "plugin.h"
+#include "loader.h"
 
-#define FATAL(...) { fprintf(stderr, __VA_ARGS__); exit(10); }
 
-struct plugin_loader_s *loader;
+plugin_loader loader;
+
+static
 plugin_handle latest_handle;
 
 int
-register_function(struct register_function_s f) {
+register_for_plugin(struct plugin_object_definition_s f) {
   if (MAX_PLUGINS <= loader->nfunctions) return 1;
   f.lib_handle = latest_handle;
   loader->functions[loader->nfunctions++] = f;
@@ -24,19 +24,40 @@ int
 load_plugin(const char *filename) {
   assert (loader != NULL);
   latest_handle = dlopen(filename, RTLD_LAZY);
-  if (latest_handle == NULL) FATAL("%s failed to load: %s\n", filename, dlerror());
+  if (latest_handle == NULL) PLUGIN_PERROR("%s failed to load: %s\n", filename, dlerror());
   register_plugin_callback_t reg = dlsym(latest_handle, "register_plugin");
-  if (reg == NULL) FATAL("%s failed to load: %s\n", "register_plugin", dlerror());
+  if (reg == NULL) PLUGIN_PERROR("%s failed to load: %s\n", "register_plugin", dlerror());
   return reg(loader);
 }
 
 int
-setup_loader() {
+setup_loader(char **filenames) {
+  #define PLUGIN_PATH "./"
   if (loader == NULL) {
     loader = malloc(sizeof(struct plugin_loader_s));
     *loader = (struct plugin_loader_s) {
       .version = "1.0.1",
-      .register_function = register_function
+      .built = __DATE__ " " __TIME__,
+      .register_for_plugin = register_for_plugin
     };
   }
+  char* filename = malloc(10*1024);
+  for (unsigned i = 0; filenames[i] != NULL; i++) {
+    sprintf(filename, PLUGIN_PATH "/%s", filenames[i]);
+    load_plugin(filename);
+  }
+  free(filename);
 }
+
+struct get_plugin_function_s
+get_plugin_function(const char* name) {
+  for (unsigned i = loader->nfunctions-1; 0 < i; i--) {
+    plugin_object obj = &loader->functions[i];
+    if (obj == NULL) continue;
+    if (!strcmp(obj->name, name)) {
+      return (struct get_plugin_function_s) { .obj = obj };
+    }
+  }
+  return (struct get_plugin_function_s) { .status=1 };
+}
+
