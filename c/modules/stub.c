@@ -12,15 +12,8 @@ iquit() {
 }
 
 int
-register_plugin(void *lib_handle,
-                const register_function_callback_t register_function,
-                struct plugin_loader_s *loader) {
-  register_function((struct register_function_s) {
-    .lib_handle=lib_handle,
-    .name="addone",
-    .declaration="double addone(unsigned arg)",
-    .unsigned_to_double_function=addone
-  });
+register_plugin(struct plugin_loader_s *loader) {
+  loader->REGISTER_FUNCTION(.name="addone", .declaration="double addone(unsigned)", .unsigned_to_double_function=addone);
   atexit(iquit);
   return 0;
 }

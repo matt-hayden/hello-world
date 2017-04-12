@@ -1,5 +1,6 @@
 CC ?= gcc
-CFLAGS = -Wall -g
+CFLAGS ?= -Wall -g
+LDFLAGS ?= -ldl
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fpic -c $^ -o $@
@@ -7,5 +8,6 @@ CFLAGS = -Wall -g
 %.so: %.o
 	$(CC) $(CFLAGS) -shared -Wl,-soname,$@ -o $@ $^
 
-loader: loader.o
-	$(CC) $(CFLAGS) $^ -o $@ -ldl
+loader_test: loader_test.o loader.o
+	$(CC) $^ -o $@ $(LDFLAGS)
+
